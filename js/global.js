@@ -18,14 +18,15 @@ $(document).ready(function () {
                         console.log(filteredRes);
                         filteredRes.forEach(item => {
                             let answer;
-                            switch (item.message.text){
-                                case "привет":
-                                    answer = "Здравствуйте";
-                                    break;
-                                case "пока":
-                                    answer = "Досвидания";
-                                    break;
+                            if (item.message.text.includes("привет")) {
+                                answer = "Здравствуйте";
                             }
+                            else if (item.message.text.includes("пока")){
+                                    answer = "Досвидания";
+                            }else {
+                                answer = "ответ еще не существует";
+                            }
+
                             $.ajax({
                                 url: 'sendMsg.php',
                                 type: 'GET',
@@ -37,8 +38,6 @@ $(document).ready(function () {
 
                         })
 
-
-                        // body.innerHTML = JSON.stringify(last);
                     }
                 })
             }, 2000);
