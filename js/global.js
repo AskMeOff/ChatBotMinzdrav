@@ -16,13 +16,14 @@ $(document).ready(function () {
                         let res = data.result;
                         let filteredRes = res.filter(item => !lastRes.some(obj => obj.update_id === item.update_id));
                         console.log(filteredRes);
+
                         filteredRes.forEach(item => {
                             let answer;
-                            if (item.message.text.includes("привет")) {
-                                answer = "Здравствуйте";
+                            if (item.message.text.toLowerCase().includes("привет")) {
+                                answer = "Здравствуйте, " + (item.message["from"].first_name === "NaN" ? item.message["from"].last_name : item.message["from"].first_name);
                             }
-                            else if (item.message.text.includes("пока")){
-                                    answer = "Досвидания";
+                            else if (item.message.text.toLowerCase().includes("пока")){
+                                    answer = "До свидания, " + (item.message["from"].first_name === "NaN" ? item.message["from"].last_name : item.message["from"].first_name);
                             }else {
                                 answer = "ответ еще не существует";
                             }
