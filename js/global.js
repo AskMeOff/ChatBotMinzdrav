@@ -1,6 +1,8 @@
+let currentPage = "main";
+let lastRes ;
 $(document).ready(function () {
-    let lastRes ;
-    let currentPage = "main";
+
+
     $.ajax({
         url: 'getAllMsgs.php',
         type: 'GET',
@@ -364,9 +366,11 @@ $(document).ready(function () {
                             }
                             else if (item.message.text.toLowerCase().includes("назад")) {
                                 console.log (item.message.text + "asdasdasd");
-                                handleButtonClick("Назад");
+                                handleButtonClick(item, "Назад", res);
+                                return;
                             } else if (item.message.text.toLowerCase().includes("главное меню")) {
-                                handleButtonClick("Главное меню");
+                                handleButtonClick(item, "Главное меню", res);
+                                return;
                             }
                             else {
                                 answer = "Неизвестная команда введите /start чтобы начать";
@@ -386,7 +390,7 @@ $(document).ready(function () {
 
                     }
                 })
-            }, 2000);
+            }, 3000);
         }
     });
 
@@ -394,7 +398,7 @@ $(document).ready(function () {
 
 
 
-function handleButtonClick(buttonText) {
+function handleButtonClick(item, buttonText, res) {
     console.log (buttonText);
     if (buttonText === "Назад") {
         if (currentPage === "create_request") {
