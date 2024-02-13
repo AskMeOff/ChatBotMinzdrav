@@ -1,5 +1,5 @@
 <?php
-$token = "6975059354:AAHLeE-_uDIOsVbql13DgSHP-PJN5B8WGQg";
+$token = "6975059354:AAE-Vjnx_RPyjqZJQh_zr80CmfY7YMp4q_A";
 $chat_id = $_GET["idChat"];
 
 $textMessage = $_GET["message"];

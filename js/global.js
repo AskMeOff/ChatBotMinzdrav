@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let lastRes = [];
+    let lastRes ;
 
     $.ajax({
         url: 'getAllMsgs.php',
@@ -32,9 +32,10 @@ $(document).ready(function () {
                                 url: 'sendMsg.php',
                                 type: 'GET',
                                 data: {idChat: item.message.chat.id, message: answer},
-                            }).done(response => {
+                                success:  (response) => {
                                 console.log(response);
                                 lastRes = res;
+                            }
                             })
 
                         })

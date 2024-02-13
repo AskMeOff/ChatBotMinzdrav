@@ -1,17 +1,16 @@
 <?php
-$token = "6975059354:AAHLeE-_uDIOsVbql13DgSHP-PJN5B8WGQg";
+$token = "6975059354:AAE-Vjnx_RPyjqZJQh_zr80CmfY7YMp4q_A";
 
-$urlQuery = "https://api.telegram.org/bot". $token ."/getUpdates";
+$baseUrl = "https://api.telegram.org/bot" . $token . "/getUpdates";
 
-//$curl
-//    =
-//    curl_init();
-//curl_setopt($curl, CURLOPT_URL, $urlQuery);
-//curl_exec($curl);
-//curl_setopt($curl,
-//    CURLOPT_RETURNTRANSFER
-//    , 1);
-//$result = curl_exec($curl);
-$result = file_get_contents($urlQuery);
+$allUpdates = [];
 
-echo $result;
+$offset = 0;
+$limit = 100;
+
+
+    $urlQuery = $baseUrl . "?offset=" . $offset . "&limit=" . $limit;
+    $result = file_get_contents($urlQuery);
+
+
+    echo $result;
