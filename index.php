@@ -2,25 +2,37 @@
 
 $data = json_decode(file_get_contents('php://input'), TRUE);
 //пишем в файл лог сообщений
-file_put_contents('file.txt', '$data: '.print_r($data, 1)."\n", FILE_APPEND);
+file_put_contents('file.txt', '$data: ' . print_r($data, 1) . "\n", FILE_APPEND);
 
 $data = $data['callback_query'] ? $data['callback_query'] : $data['message'];
 
-define('TOKEN', '6829954140:AAEKsopPLCe3C5xCTtk1RaHj8mV6R7OhEMc');
+define('TOKEN', '6975059354:AAE-Vjnx_RPyjqZJQh_zr80CmfY7YMp4q_A');
 
-$message = mb_strtolower(($data['text'] ? $data['text'] : $data['data']),'utf-8');
+$message = mb_strtolower(($data['text'] ? $data['text'] : $data['data']), 'utf-8');
 
-
+$currentPage = "";
 switch ($message) {
     case '/start':
+        $currentPage = "main";
         $method = 'sendMessage';
-        $send_data = ['text' => 'Привет! Я бот Telegram.'];
+//        $buttons = [
+//            [["text" => "Создать запрос"], ["request_contact" => true]], ["text" => "Помощь"],
+//        ];
+//        $reply_markup = ["replyMarkup" => [
+//            ["keyboard" => $buttons], ["resize_keyboard" => true]
+//        ]];
+
+        $send_data = [
+            "text" => ["Здравствуйте, " . $data->from->first_name === "NaN" ? $data->from->last_name : $data->from->first_name . "\nВыберите действие из меню"]
+//            ["reply_markup" => $reply_markup]
+        ];
+
         break;
     case 'да':
         $method = 'sendMessage';
         $send_data = [
             'text' => 'Что вы хотите заказать?',
-            'reply_markup'  => [
+            'reply_markup' => [
                 'resize_keyboard' => true,
                 'keyboard' => [
                     [
@@ -59,7 +71,7 @@ switch ($message) {
         $method = 'sendMessage';
         $send_data = [
             'text' => 'Вы хотите сделать заказ?',
-            'reply_markup'  => [
+            'reply_markup' => [
                 'resize_keyboard' => true,
                 'keyboard' => [
                     [
@@ -74,8 +86,6 @@ switch ($message) {
 $send_data['chat_id'] = $data['chat'] ['id'];
 
 $res = sendTelegram($method, $send_data);
-
-
 
 
 function sendTelegram($method, $data, $headers = [])
