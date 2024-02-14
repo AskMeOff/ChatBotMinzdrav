@@ -2,7 +2,7 @@
 
 $data = json_decode(file_get_contents('php://input'), TRUE);
 //пишем в файл лог сообщений
-file_put_contents('file.txt', '$data: ' . print_r($data, 1) . "\n", FILE_APPEND);
+//file_put_contents('file.txt', '$data: ' . print_r($data, 1) . "\n", FILE_APPEND);
 
 $data = $data['callback_query'] ? $data['callback_query'] : $data['message'];
 
@@ -12,14 +12,14 @@ $message = mb_strtolower(($data['text'] ? $data['text'] : $data['data']), 'utf-8
 
 $currentPage = "";
 switch ($message) {
-
     case '/start':
+    case 'главное меню':
         $currentPage = "main";
         $method = 'sendMessage';
         $buttons = [
             [
                 [
-                    "text" => "Создать запрос",
+                    "text" => 'Создать запрос',
                     "request_contact" => true
                 ]
             ],
@@ -40,58 +40,393 @@ switch ($message) {
         ];
 
         break;
-    case 'да':
+
+    case false:
         $method = 'sendMessage';
         $send_data = [
-            'text' => 'Что вы хотите заказать?',
+            'text' => 'Выберите тип запроса:',
             'reply_markup' => [
                 'resize_keyboard' => true,
                 'keyboard' => [
                     [
-                        ['text' => 'Яблоки'],
-                        ['text' => 'Груши'],
+
+                        ['text' => 'Главное меню']
                     ],
                     [
-                        ['text' => 'Лук'],
-                        ['text' => 'Чеснок'],
+                        ['text' => 'Жалоба']
+
+                    ],
+                    [
+
+                        ['text' => 'Вопрос'],
+                    ],
+                    [
+
+                        ['text' => 'Предложение']
                     ]
                 ]
             ]
         ];
         break;
-    case 'нет':
+    case 'жалоба':
+    case 'вопрос':
+    case 'предложение':
+        $currentPage = "select_area";
         $method = 'sendMessage';
-        $send_data = ['text' => 'Приходите еще'];
+        $buttons = [
+            [
+                ["text" => 'Брестская'],
+                ["text" => 'Витебская']
+
+            ],
+            [
+                ["text" => 'Гомельская'],
+                ["text" => 'Гродненская']
+
+            ],
+            [
+                ["text" => 'Минская'],
+                ["text" => 'Могилевская']
+
+            ]
+        ];
+        $reply_markup = [
+            "keyboard" => $buttons,
+            "resize_keyboard" => true
+        ];
+        $text = "Выберите область";
+        $send_data = [
+            "text" => $text,
+            "reply_markup" => $reply_markup
+        ];
         break;
-    case 'яблоки':
+
+    case 'брестская':
+        $currentPage = "brest_area";
         $method = 'sendMessage';
-        $send_data = ['text' => 'заказ принят!'];
+        $buttons = [
+            [
+                ["text" => 'Район1'],
+                ["text" => 'Район2']
+            ],
+            [
+                ["text" => 'Район3'],
+                ["text" => 'Район4']
+            ],
+            [
+                ["text" => 'Район5'],
+                ["text" => 'Район6']
+            ],
+            [
+                ["text" => 'Район7'],
+                ["text" => 'Район8']
+            ],
+            [
+                ["text" => 'Район9'],
+                ["text" => 'Район10']
+            ],
+            [
+                ["text" => 'Район11'],
+                ["text" => 'Район12']
+            ],
+            [
+                ["text" => 'Район13'],
+                ["text" => 'Район14']
+            ],
+            [
+                ["text" => 'Назад'],
+                ["text" => 'Главное меню']
+            ]
+        ];
+        $reply_markup = [
+            "keyboard" => $buttons,
+            "resize_keyboard" => true
+        ];
+        $text = "Выберите район";
+        $send_data = [
+            "text" => $text,
+            "reply_markup" => $reply_markup
+        ];
         break;
-    case 'груши':
+    case 'витебская':
+        $currentPage = "vitebsk_area";
         $method = 'sendMessage';
-        $send_data = ['text' => 'заказ принят!'];
+        $buttons = [
+            [
+                ["text" => 'Район1'],
+                ["text" => 'Район2']
+            ],
+            [
+                ["text" => 'Район3'],
+                ["text" => 'Район4']
+            ],
+            [
+                ["text" => 'Район5'],
+                ["text" => 'Район6']
+            ],
+            [
+                ["text" => 'Район7'],
+                ["text" => 'Район8']
+            ],
+            [
+                ["text" => 'Район9'],
+                ["text" => 'Район10']
+            ],
+            [
+                ["text" => 'Район11'],
+                ["text" => 'Район12']
+            ],
+            [
+                ["text" => 'Район13'],
+                ["text" => 'Район14']
+            ],
+            [
+                ["text" => 'Назад'],
+                ["text" => 'Главное меню']
+            ]
+        ];
+        $reply_markup = [
+            "keyboard" => $buttons,
+            "resize_keyboard" => true
+        ];
+        $text = "Выберите район";
+        $send_data = [
+            "text" => $text,
+            "reply_markup" => $reply_markup
+        ];
         break;
-    case 'лук':
+    case 'гомельская':
+        $currentPage = "homel_area";
         $method = 'sendMessage';
-        $send_data = ['text' => 'заказ принят!'];
+        $buttons = [
+            [
+                ["text" => 'Район1'],
+                ["text" => 'Район2']
+            ],
+            [
+                ["text" => 'Район3'],
+                ["text" => 'Район4']
+            ],
+            [
+                ["text" => 'Район5'],
+                ["text" => 'Район6']
+            ],
+            [
+                ["text" => 'Район7'],
+                ["text" => 'Район8']
+            ],
+            [
+                ["text" => 'Район9'],
+                ["text" => 'Район10']
+            ],
+            [
+                ["text" => 'Район11'],
+                ["text" => 'Район12']
+            ],
+            [
+                ["text" => 'Район13'],
+                ["text" => 'Район14']
+            ],
+            [
+                ["text" => 'Назад'],
+                ["text" => 'Главное меню']
+            ]
+        ];
+        $reply_markup = [
+            "keyboard" => $buttons,
+            "resize_keyboard" => true
+        ];
+        $text = "Выберите район";
+        $send_data = [
+            "text" => $text,
+            "reply_markup" => $reply_markup
+        ];
         break;
-    case 'чеснок':
+    case "гродненская":
+        $currentPage = "grodno_area";
         $method = 'sendMessage';
-        $send_data = ['text' => 'заказ принят!'];
+        $buttons = [
+            [
+                ["text" => 'Район1'],
+                ["text" => 'Район2']
+            ],
+            [
+                ["text" => 'Район3'],
+                ["text" => 'Район4']
+            ],
+            [
+                ["text" => 'Район5'],
+                ["text" => 'Район6']
+            ],
+            [
+                ["text" => 'Район7'],
+                ["text" => 'Район8']
+            ],
+            [
+                ["text" => 'Район9'],
+                ["text" => 'Район10']
+            ],
+            [
+                ["text" => 'Район11'],
+                ["text" => 'Район12']
+            ],
+            [
+                ["text" => 'Район13'],
+                ["text" => 'Район14']
+            ],
+            [
+                ["text" => 'Назад'],
+                ["text" => 'Главное меню']
+            ]
+        ];
+        $reply_markup = [
+            "keyboard" => $buttons,
+            "resize_keyboard" => true
+        ];
+        $text = "Выберите район";
+        $send_data = [
+            "text" => $text,
+            "reply_markup" => $reply_markup
+        ];
+        break;
+    case "минская":
+        $currentPage = "minsk_area";
+        $method = 'sendMessage';
+        $buttons = [
+            [
+                ["text" => 'Район1'],
+                ["text" => 'Район2']
+            ],
+            [
+                ["text" => 'Район3'],
+                ["text" => 'Район4']
+            ],
+            [
+                ["text" => 'Район5'],
+                ["text" => 'Район6']
+            ],
+            [
+                ["text" => 'Район7'],
+                ["text" => 'Район8']
+            ],
+            [
+                ["text" => 'Район9'],
+                ["text" => 'Район10']
+            ],
+            [
+                ["text" => 'Район11'],
+                ["text" => 'Район12']
+            ],
+            [
+                ["text" => 'Район13'],
+                ["text" => 'Район14']
+            ],
+            [
+                ["text" => 'Назад'],
+                ["text" => 'Главное меню']
+            ]
+        ];
+        $reply_markup = [
+            "keyboard" => $buttons,
+            "resize_keyboard" => true
+        ];
+        $text = "Выберите район";
+        $send_data = [
+            "text" => $text,
+            "reply_markup" => $reply_markup
+        ];
+        break;
+    case "могилевская":
+        $currentPage = "mogilev_area";
+        $method = 'sendMessage';
+        $buttons = [
+            [
+                ["text" => 'Район1'],
+                ["text" => 'Район2']
+            ],
+            [
+                ["text" => 'Район3'],
+                ["text" => 'Район4']
+            ],
+            [
+                ["text" => 'Район5'],
+                ["text" => 'Район6']
+            ],
+            [
+                ["text" => 'Район7'],
+                ["text" => 'Район8']
+            ],
+            [
+                ["text" => 'Район9'],
+                ["text" => 'Район10']
+            ],
+            [
+                ["text" => 'Район11'],
+                ["text" => 'Район12']
+            ],
+            [
+                ["text" => 'Район13'],
+                ["text" => 'Район14']
+            ],
+            [
+                ["text" => 'Назад'],
+                ["text" => 'Главное меню']
+            ]
+        ];
+        $reply_markup = [
+            "keyboard" => $buttons,
+            "resize_keyboard" => true
+        ];
+        $text = "Выберите район";
+        $send_data = [
+            "text" => $text,
+            "reply_markup" => $reply_markup
+        ];
+        break;
+    case 'назад':
+        if ($currentPage == "homel_area" || $currentPage == "brest_area" ||
+            $currentPage == "vitebsk_area" || $currentPage == "grodno_area" ||
+            $currentPage == "mogilev_area" || $currentPage == "minsk_area") {
+            $currentPage = "select_area";
+            $method = 'sendMessage';
+            $text = "Выберите область";
+            $buttons = [
+                [
+                    ["text" => "Брестская"],
+                    ["text" => "Витебская"]
+                ],
+                [
+                    ["text" => "Гомельская"],
+                    ["text" => "Гродненская"]
+                ],
+                [
+                    ["text" => "Могилевская"],
+                    ["text" => "Минская"]
+                ],
+                [
+                    ["text" => "Назад"],
+                    ["text" => "Главное меню"]
+                ]
+            ];
+
+            $replyMarkup = [
+                "keyboard" => $buttons,
+                "resize_keyboard" => true
+            ];
+            $send_data = [
+                "text" => $text,
+                "reply_markup" => $replyMarkup
+            ];
+        }
         break;
     default:
+        echo $message;
         $currentPage = "main";
         $method = 'sendMessage';
         $buttons = [
             [
                 [
-                    "text" => "Создать запрос",
-                    "request_contact" => true
-                ]
-            ],
-            [
-                [
-                    "text" => "Помощь"
+                    "text" => 'Главное меню'
                 ]
             ]
         ];
