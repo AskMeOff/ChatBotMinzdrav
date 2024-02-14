@@ -12,19 +12,31 @@ $message = mb_strtolower(($data['text'] ? $data['text'] : $data['data']), 'utf-8
 
 $currentPage = "";
 switch ($message) {
+
     case '/start':
         $currentPage = "main";
         $method = 'sendMessage';
-//        $buttons = [
-//            [["text" => "Создать запрос"], ["request_contact" => true]], ["text" => "Помощь"],
-//        ];
-//        $reply_markup = ["replyMarkup" => [
-//            ["keyboard" => $buttons], ["resize_keyboard" => true]
-//        ]];
-
+        $buttons = [
+            [
+                [
+                    "text" => "Создать запрос",
+                    "request_contact" => true
+                ]
+            ],
+            [
+                [
+                    "text" => "Помощь"
+                ]
+            ]
+        ];
+        $reply_markup = [
+            "keyboard" => $buttons,
+            "resize_keyboard" => true
+        ];
+        $text = "Здравствуйте, " . ($data["from"]["first_name"] === "null" ? $data["from"]["last_name"] : $data["from"]["first_name"]) . "\nВыберите действие из меню";
         $send_data = [
-            "text" => ["Здравствуйте, " . $data->from->first_name === "NaN" ? $data->from->last_name : $data->from->first_name . "\nВыберите действие из меню"]
-//            ["reply_markup" => $reply_markup]
+            "text" => $text,
+            "reply_markup" => $reply_markup
         ];
 
         break;
@@ -68,17 +80,26 @@ switch ($message) {
         $send_data = ['text' => 'заказ принят!'];
         break;
     default:
+        $currentPage = "main";
         $method = 'sendMessage';
+        $buttons = [
+            [
+                [
+                    "text" => "Создать запрос",
+                    "request_contact" => true
+                ]
+            ],
+            [
+                [
+                    "text" => "Помощь"
+                ]
+            ]
+        ];
         $send_data = [
-            'text' => 'Вы хотите сделать заказ?',
+            'text' => "Неизвестная команда \n Введите /start для создания запроса",
             'reply_markup' => [
                 'resize_keyboard' => true,
-                'keyboard' => [
-                    [
-                        ['text' => 'Да'],
-                        ['text' => 'Нет'],
-                    ]
-                ]
+                'keyboard' => $buttons
             ]
         ];
 }
