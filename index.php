@@ -1,5 +1,5 @@
 <?php
-require_once 'connection.php';
+include 'connection.php';
 $data = json_decode(file_get_contents('php://input'), TRUE);
 //пишем в файл лог сообщений
 //file_put_contents('file.txt', '$data: ' . print_r($data, 1) . "\n", FILE_APPEND);
@@ -91,7 +91,7 @@ switch ($message) {
 
             ],
             [
-                 ['text' => 'Главное меню']
+                ['text' => 'Главное меню']
             ]
         ];
         $reply_markup = [
@@ -442,21 +442,74 @@ switch ($message) {
         break;
 
     case "берестовицкий":
-        $sql = "SELECT * FROM table_org";
-        $result = $con->query($sql);
+        $sql = "SELECT * FROM ab1_table_org";
+        $result = mysqli_query($con, $sql);
         $currentPage = "берестовицкий";
         $method = 'sendMessage';
         $buttons = [];
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $name = $row["name"];
-                $buttons[] = [
-                    [
-                    ["text" => $name]
-                        ]
+
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $name = $row["name"];
+                    $button =
+                        [
+                            ["text" => $name]
+                        ];
+                    array_push($buttons,$button);
+                }
+            }
+            else{
+                $text = "Ошибка".mysqli_error($con)."";
+                $send_data = [
+                    "text" => $text
+
                 ];
             }
-        }
+            $reply_markup = [
+                "keyboard" => $buttons,
+                "resize_keyboard" => true
+            ];
+
+            $text = "Выберите организацию";
+            $send_data = [
+                "text" => $text,
+                "reply_markup" => $reply_markup
+            ];
+break;
+
+
+case "берестовицкая центральная районная больница":
+            $method = 'sendMessage';
+            $text = "Опишите вашу проблему";
+    $buttons = [
+        [
+            ["text" => 'Чат с оператором']
+
+        ]
+    ];
+            $reply_markup = [
+                  "keyboard" => $buttons,
+                  "resize_keyboard" => true
+            ];
+            $send_data = [
+                "text" => $text,
+                "reply_markup" => $reply_markup
+            ];
+        break;
+
+    case "":
+
+        $method = 'sendMessage';
+        $buttons = [
+            [
+                ["text" => 'Решено'],
+                ["text" => 'Не решено']
+            ],
+            [
+                ["text" => 'Главное меню']
+
+            ]
+        ];
         $reply_markup = [
             "keyboard" => $buttons,
             "resize_keyboard" => true
@@ -467,32 +520,6 @@ switch ($message) {
             "text" => $text,
             "reply_markup" => $reply_markup
         ];
-        break;
-
-
-        case "берестовицкий1":
-            $currentPage = "берестовицкий1";
-            $method = 'sendMessage';
-            $buttons = [
-                [
-                    ["text" => 'Решено'],
-                    ["text" => 'Не решено']
-                ],
-                [
-                    ["text" => 'Главное меню']
-
-                ]
-                       ];
-            $reply_markup = [
-                "keyboard" => $buttons,
-                "resize_keyboard" => true
-            ];
-
-            $text = "Перейдите в чат с оператором для решения вашего вопроса \n Открыть чат с оператором \n tg: https://t.me/ai_sotikin \n После того как вы завершите диалог с оператором - оставьте отзыв с помощью кнопок действия";
-            $send_data = [
-                "text" => $text,
-                "reply_markup" => $reply_markup
-            ];
         break;
 
     default:
@@ -515,7 +542,7 @@ switch ($message) {
         ];
 }
 
-$send_data['chat_id'] = $data['chat'] ['id'];
+$send_data['chat_id'] = $data['chat']['id'];
 
 $res = sendTelegram($method, $send_data);
 
