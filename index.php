@@ -274,12 +274,35 @@ if ($message == '/start' || $message == 'главное меню') {
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
-        "text" => $text
+        "text" => $text,
+          "reply_markup" => json_encode([
+          "remove_keyboard" => true
+    ])
     ];
     $current_state = 'problem_description';
-} else {
+}elseif (($message == "решено") || ($message== "не решено")) {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updStatus($data, $con, $message);
+    $method = 'sendMessage';
+    $text = 'Спасибо за обращение. Ваше обращение будет рассмотрено администрацией. Чтобы вернуться в главное меню введите /start или воспользуйтесь кнопкой действия Главное меню';
+    $buttons = [
+        [["text" => 'Главное меню']]];
+    $reply_markup = [
+        "keyboard" => $buttons,
+        "resize_keyboard" => true
+    ];
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => $reply_markup
+    ];
 
-
+}
+else {
     $id_chat = $data['chat']['id'];
     $query = "SELECT id_type,id_obl,id_rayon,id_org,login_telegram  FROM ab1_zayavka where id_chat = '$id_chat' ORDER BY id_ab1_zayavka DESC LIMIT 1;";
     $res = mysqli_query($con, $query);
@@ -299,10 +322,6 @@ if ($message == '/start' || $message == 'главное меню') {
             [
                 ["text" => 'Решено'],
                 ["text" => 'Не решено']
-            ],
-            [
-                ["text" => 'Главное меню']
-
             ]
         ];
         $reply_markup = [
@@ -411,5 +430,18 @@ function updAnswer($data, $con, $message)
     $query1 = "UPDATE ab1_zayavka SET answer = '$message' where id_ab1_zayavka = '$id_zayavka'";
     mysqli_query($con, $query1);
 }
+function updStatus($data, $con, $message)
+{
 
+    $id_chat = $data['chat']['id'];
+    $query = "SELECT id_ab1_zayavka  FROM ab1_zayavka where id_chat = '$id_chat' ORDER BY id_ab1_zayavka DESC LIMIT 1;";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $id_zayavka = $row['id_ab1_zayavka'];
+
+    }
+    $query1 = "UPDATE ab1_zayavka SET status = '$message' where id_ab1_zayavka = '$id_zayavka'";
+    mysqli_query($con, $query1);
+}
 ?>
