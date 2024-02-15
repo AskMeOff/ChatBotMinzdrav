@@ -80,7 +80,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "reply_markup" => $reply_markup
     ];
 } elseif ($message == 'брестская') {
-    updObl ($data,$con,$message);
+
     $method = 'sendMessage';
     $buttons = [
         [["text" => 'Барановичский'], ["text" => 'Березовский']],
@@ -104,7 +104,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "reply_markup" => $reply_markup
     ];
 } else if ($message == 'витебская') {
-    updObl ($data,$con,$message);
+
     $currentPage = "vitebsk_area";
     $method = 'sendMessage';
     $buttons = [
@@ -130,7 +130,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "reply_markup" => $reply_markup
     ];
 } elseif ($message == 'гомельская') {
-    updObl ($data,$con,$message);
+
     $currentPage = "homel_area";
     $method = 'sendMessage';
     $buttons = [
@@ -153,7 +153,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "reply_markup" => $reply_markup
     ];
 } elseif ($message == 'гродненская') {
-     updObl ($data,$con,$message);
+
     $currentPage = "grodno_area";
     $method = 'sendMessage';
     $buttons = [
@@ -178,7 +178,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "reply_markup" => $reply_markup
     ];
 } elseif ($message == 'минская') {
-    updObl ($data,$con,$message);
+
     $currentPage = "minsk_area";
     $method = 'sendMessage';
     $buttons = [
@@ -205,7 +205,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "reply_markup" => $reply_markup
     ];
 } elseif ($message == 'могилевская') {
-    updObl ($data,$con,$message);
+
     $currentPage = "mogilev_area";
     $method = 'sendMessage';
     $buttons = [
@@ -232,7 +232,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "reply_markup" => $reply_markup
     ];
 } elseif ($message == 'берестовицкий') {
-    updRayon($data, $con, $message);
+
     $sql = "SELECT * FROM ab1_table_org";
     $result = mysqli_query($con, $sql);
     $method = 'sendMessage';
@@ -373,34 +373,6 @@ function sendTelegram($method, $data, $headers = [])
     return (json_decode($result, 1) ? json_decode($result, 1) : $result);
 }
 
-function updObl($data, $con, $message)
-{
-
-    $id_chat = $data['chat']['id'];
-    $query = "SELECT id_ab1_zayavka  FROM ab1_zayavka where id_chat = '$id_chat' ORDER BY id_ab1_zayavka DESC LIMIT 1;";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $id_zayavka = $row['id_ab1_zayavka'];
-
-    }
-    $query1 = "UPDATE ab1_zayavka SET id_obl = '$message' where id_ab1_zayavka = '$id_zayavka'";
-    mysqli_query($con, $query1);
-}
-function updRayon($data, $con, $message)
-{
-
-    $id_chat = $data['chat']['id'];
-    $query = "SELECT id_ab1_zayavka  FROM ab1_zayavka where id_chat = '$id_chat' ORDER BY id_ab1_zayavka DESC LIMIT 1;";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $id_zayavka = $row['id_ab1_zayavka'];
-
-    }
-    $query1 = "UPDATE ab1_zayavka SET id_rayon = '$message' where id_ab1_zayavka = '$id_zayavka'";
-    mysqli_query($con, $query1);
-}
 function updOrg($data, $con, $message, $login_telegram)
 {
 
@@ -412,7 +384,16 @@ function updOrg($data, $con, $message, $login_telegram)
         $id_zayavka = $row['id_ab1_zayavka'];
 
     }
-    $query1 = "UPDATE ab1_zayavka SET id_org = '$message',login_telegram = '$login_telegram' where id_ab1_zayavka = '$id_zayavka'";
+    $query = "SELECT oblast, rayon  FROM ab1_table_org where login_telegram = '$login_telegram'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $oblast = $row['$oblast'];
+        $rayon = $row['rayon'];
+
+    }
+    
+    $query1 = "UPDATE ab1_zayavka SET id_org = '$message', id_oblast = '$oblast', id_rayon = '$rayon', login_telegram = '$login_telegram' where id_ab1_zayavka = '$id_zayavka'";
     mysqli_query($con, $query1);
 }
 
