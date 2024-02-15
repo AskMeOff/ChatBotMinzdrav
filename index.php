@@ -1,5 +1,5 @@
 <?php
-
+require_once 'connection.php';
 $data = json_decode(file_get_contents('php://input'), TRUE);
 //пишем в файл лог сообщений
 //file_put_contents('file.txt', '$data: ' . print_r($data, 1) . "\n", FILE_APPEND);
@@ -440,41 +440,61 @@ switch ($message) {
             "reply_markup" => $reply_markup
         ];
         break;
-    case 'назад':
-        if ($currentPage == "homel_area" || $currentPage == "brest_area" ||
-            $currentPage == "vitebsk_area" || $currentPage == "grodno_area" ||
-            $currentPage == "mogilev_area" || $currentPage == "minsk_area") {
-            $currentPage = "select_area";
+
+    case "берестовицкий":
+        $sql = "SELECT * FROM table_org";
+        $result = $con->query($sql);
+        $currentPage = "берестовицкий";
+        $method = 'sendMessage';
+        $buttons = [];
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $name = $row["name"];
+                $buttons[] = [
+                    [
+                    ["text" => $name]
+                        ]
+                ];
+            }
+        }
+        $reply_markup = [
+            "keyboard" => $buttons,
+            "resize_keyboard" => true
+        ];
+
+        $text = "Перейдите в чат с оператором для решения вашего вопроса \n Открыть чат с оператором \n tg: https://t.me/ai_sotikin \n После того как вы завершите диалог с оператором - оставьте отзыв с помощью кнопок действия";
+        $send_data = [
+            "text" => $text,
+            "reply_markup" => $reply_markup
+        ];
+        break;
+
+
+        case "берестовицкий1":
+            $currentPage = "берестовицкий1";
             $method = 'sendMessage';
-            $text = "Выберите область";
             $buttons = [
                 [
-                    ["text" => "Брестская"],
-                    ["text" => "Витебская"]
+                    ["text" => 'Решено'],
+                    ["text" => 'Не решено']
                 ],
                 [
-                    ["text" => "Гомельская"],
-                    ["text" => "Гродненская"]
-                ],
-                [
-                    ["text" => "Могилевская"],
-                    ["text" => "Минская"]
-                ],
-                [
-                    ["text" => "Главное меню"]
-                ]
-            ];
+                    ["text" => 'Главное меню']
 
-            $replyMarkup = [
+                ]
+                       ];
+            $reply_markup = [
                 "keyboard" => $buttons,
                 "resize_keyboard" => true
             ];
+
+            $text = "Перейдите в чат с оператором для решения вашего вопроса \n Открыть чат с оператором \n tg: https://t.me/ai_sotikin \n После того как вы завершите диалог с оператором - оставьте отзыв с помощью кнопок действия";
             $send_data = [
                 "text" => $text,
-                "reply_markup" => $replyMarkup
+                "reply_markup" => $reply_markup
             ];
-        }
         break;
+
     default:
         echo $message;
         $currentPage = "main";
