@@ -279,8 +279,194 @@ if ($message == '/start' || $message == 'главное меню') {
           "remove_keyboard" => true
     ])
     ];
-    $current_state = 'problem_description';
-}elseif (($message == "решено") || ($message== "не решено")) {
+} elseif ($message == "эйсмонтовская больница сестринского ухода") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "м. берестовицкая авоп") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "макаровская авоп") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "пограничная авоп") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "эисмонтовская авоп") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "олекшицкая авоп") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "кватерский фап") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "конюховский фап") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "массолянский фап") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "пархимовский фап") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif ($message == "поплавский фап") {
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif (($message == "решено") || ($message== "не решено")) {
     $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
     $res = mysqli_query($con, $query);
     if (mysqli_num_rows($res) == 1) {
@@ -384,16 +570,16 @@ function updOrg($data, $con, $message, $login_telegram)
         $id_zayavka = $row['id_ab1_zayavka'];
 
     }
-    $query = "SELECT oblast, rayon  FROM ab1_table_org where login_telegram = '$login_telegram'";
+    $query = "SELECT oblast, rayon  FROM ab1_table_org where login_telegram = '$login_telegram' limit 1";
     $res = mysqli_query($con, $query);
     if (mysqli_num_rows($res) == 1) {
         $row = mysqli_fetch_assoc($res);
-        $oblast = $row['$oblast'];
+        $oblast = $row['oblast'];
         $rayon = $row['rayon'];
 
     }
     
-    $query1 = "UPDATE ab1_zayavka SET id_org = '$message', id_oblast = '$oblast', id_rayon = '$rayon', login_telegram = '$login_telegram' where id_ab1_zayavka = '$id_zayavka'";
+    $query1 = "UPDATE ab1_zayavka SET id_org = '$message', id_obl = '$oblast', id_rayon = '$rayon', login_telegram = '$login_telegram' where id_ab1_zayavka = '$id_zayavka'";
     mysqli_query($con, $query1);
 }
 
