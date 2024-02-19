@@ -3,16 +3,16 @@ include 'connection.php';
 $dataupdate = json_decode(file_get_contents('php://input'), TRUE);
 
 //пишем в файл лог сообщений
-//file_put_contents('file.txt', '$data: ' . print_r($data, 1) . "\n", FILE_APPEND);
+file_put_contents('file.txt', '$data: ' . print_r($dataupdate, 1) . "\n", FILE_APPEND);
 
 $data = $dataupdate['callback_query'] ? $dataupdate['callback_query'] : $dataupdate['message'];
 
 define('TOKEN', '6975059354:AAE-Vjnx_RPyjqZJQh_zr80CmfY7YMp4q_A');
 
-$message = mb_strtolower(($data['text'] ? $data['text'] : $data['data']), 'utf-8');
+$message = ($data['text'] ? $data['text'] : $data['data']);
 
 
-if ($message == '/start' || $message == 'главное меню') {
+if ($message == '/start' || $message == 'Главное меню') {
     $method = 'sendMessage';
     $buttons = [
         [
@@ -37,6 +37,18 @@ if ($message == '/start' || $message == 'главное меню') {
         "reply_markup" => $reply_markup
     ];
 } elseif (!$message) {
+    $id_chat = $data['chat']['id'];
+    $phone_number = $data['contact']['phone_number'];
+    $username = $data['from']['username'];
+    if($username == "") {
+        $username = $data['from']['first_name'];
+        if($username == "") {
+            $username = $data['from']['last_name'];
+        }
+    }
+
+    $query = "INSERT INTO ab1_zayavka (phone_number,id_chat, username) values('$phone_number','$id_chat', '$username')";
+    mysqli_query($con, $query);
     $method = 'sendMessage';
     $send_data = [
         'text' => 'Выберите тип запроса:',
@@ -50,9 +62,9 @@ if ($message == '/start' || $message == 'главное меню') {
             ]
         ]
     ];
-} elseif ($message == 'жалоба' || $message == 'вопрос' || $message == 'предложение') {
+} elseif ($message == 'Жалоба' || $message == 'Вопрос' || $message == 'Предложение') {
     $id_chat = $data['chat']['id'];
-    $query = "INSERT INTO ab1_zayavka (id_type,id_chat) values('$message','$id_chat')";
+    $query = "update ab1_zayavka set id_type = '$message' where id_chat = '$id_chat'";
     mysqli_query($con, $query);
     $method = 'sendMessage';
     $buttons = [
@@ -79,7 +91,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "text" => $text,
         "reply_markup" => $reply_markup
     ];
-} elseif ($message == 'брестская') {
+} elseif ($message == 'Брестская') {
 
     $method = 'sendMessage';
     $buttons = [
@@ -103,7 +115,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "text" => $text,
         "reply_markup" => $reply_markup
     ];
-} else if ($message == 'витебская') {
+} else if ($message == 'Витебская') {
 
     $currentPage = "vitebsk_area";
     $method = 'sendMessage';
@@ -129,7 +141,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "text" => $text,
         "reply_markup" => $reply_markup
     ];
-} elseif ($message == 'гомельская') {
+} elseif ($message == 'Гомельская') {
 
     $currentPage = "homel_area";
     $method = 'sendMessage';
@@ -152,9 +164,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "text" => $text,
         "reply_markup" => $reply_markup
     ];
-} elseif ($message == 'гродненская') {
-
-    $currentPage = "grodno_area";
+} elseif ($message == 'Гродненская') {
     $method = 'sendMessage';
     $buttons = [
         [["text" => 'Берестовицкий'], ["text" => 'Волковысский']],
@@ -177,9 +187,8 @@ if ($message == '/start' || $message == 'главное меню') {
         "text" => $text,
         "reply_markup" => $reply_markup
     ];
-} elseif ($message == 'минская') {
+} elseif ($message == 'Минская') {
 
-    $currentPage = "minsk_area";
     $method = 'sendMessage';
     $buttons = [
         [["text" => 'Березинский'], ["text" => 'Борисовский']],
@@ -204,9 +213,7 @@ if ($message == '/start' || $message == 'главное меню') {
         "text" => $text,
         "reply_markup" => $reply_markup
     ];
-} elseif ($message == 'могилевская') {
-
-    $currentPage = "mogilev_area";
+} elseif ($message == 'Могилевская') {
     $method = 'sendMessage';
     $buttons = [
         [["text" => 'Белыничский'], ["text" => 'Бобруйский']],
@@ -231,9 +238,8 @@ if ($message == '/start' || $message == 'главное меню') {
         "text" => $text,
         "reply_markup" => $reply_markup
     ];
-} elseif ($message == 'берестовицкий') {
-
-    $sql = "SELECT * FROM ab1_table_org";
+} elseif ($message == 'Берестовицкий') {
+    $sql = "SELECT * FROM ab1_table_org where rayon = '$message'";
     $result = mysqli_query($con, $sql);
     $method = 'sendMessage';
     $buttons = [];
@@ -263,30 +269,52 @@ if ($message == '/start' || $message == 'главное меню') {
         "text" => $text,
         "reply_markup" => $reply_markup
     ];
-} elseif ($message == "берестовицкая центральная районная больница") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
+}
+elseif ($message == 'Гродно') {
+
+    $sql = "SELECT * FROM ab1_table_org where rayon = '$message'";
+    $result = mysqli_query($con, $sql);
+    $method = 'sendMessage';
+    $buttons = [];
+
+    if (mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $name = $row["name"];
+            $button =
+                [
+                    ["text" => $name]
+                ];
+            array_push($buttons, $button);
+        }
+    } else {
+        $text = "Ошибка" . mysqli_error($con) . "";
+        $send_data = [
+            "text" => $text
+        ];
     }
-    updOrg($data, $con, $message,$login_telegram);
+    $reply_markup = [
+        "keyboard" => $buttons,
+        "resize_keyboard" => true
+    ];
+
+    $text = "Выберите организацию";
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => $reply_markup
+    ];
+}
+elseif ($message == "Берестовицкая центральная районная больница") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
         "text" => $text,
-          "reply_markup" => json_encode([
-          "remove_keyboard" => true
-    ])
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
     ];
-} elseif ($message == "эйсмонтовская больница сестринского ухода") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+} elseif ($message == "Эйсмонтовская больница сестринского ухода") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -296,14 +324,8 @@ if ($message == '/start' || $message == 'главное меню') {
         ])
     ];
 }
-elseif ($message == "м. берестовицкая авоп") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "М. Берестовицкая АВОП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -313,14 +335,8 @@ elseif ($message == "м. берестовицкая авоп") {
         ])
     ];
 }
-elseif ($message == "макаровская авоп") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "Макаровская АВОП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -330,14 +346,8 @@ elseif ($message == "макаровская авоп") {
         ])
     ];
 }
-elseif ($message == "пограничная авоп") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "Пограничная АВОП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -347,14 +357,8 @@ elseif ($message == "пограничная авоп") {
         ])
     ];
 }
-elseif ($message == "эисмонтовская авоп") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "Эисмонтовская АВОП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -364,14 +368,8 @@ elseif ($message == "эисмонтовская авоп") {
         ])
     ];
 }
-elseif ($message == "олекшицкая авоп") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "Олекшицкая АВОП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -381,14 +379,8 @@ elseif ($message == "олекшицкая авоп") {
         ])
     ];
 }
-elseif ($message == "кватерский фап") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "Кватерский ФАП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -398,14 +390,8 @@ elseif ($message == "кватерский фап") {
         ])
     ];
 }
-elseif ($message == "конюховский фап") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "Конюховский ФАП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -415,14 +401,8 @@ elseif ($message == "конюховский фап") {
         ])
     ];
 }
-elseif ($message == "массолянский фап") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "Массолянский ФАП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -432,14 +412,8 @@ elseif ($message == "массолянский фап") {
         ])
     ];
 }
-elseif ($message == "пархимовский фап") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "Пархимовский ФАП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -449,14 +423,8 @@ elseif ($message == "пархимовский фап") {
         ])
     ];
 }
-elseif ($message == "поплавский фап") {
-    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
-    $res = mysqli_query($con, $query);
-    if (mysqli_num_rows($res) == 1) {
-        $row = mysqli_fetch_assoc($res);
-        $login_telegram = $row['login_telegram'];
-    }
-    updOrg($data, $con, $message,$login_telegram);
+elseif ($message == "Поплавский ФАП") {
+    selectOrg($data,$con,$message);
     $method = 'sendMessage';
     $text = 'Опишите вашу проблему';
     $send_data = [
@@ -466,7 +434,18 @@ elseif ($message == "поплавский фап") {
         ])
     ];
 }
-elseif (($message == "решено") || ($message== "не решено")) {
+elseif ($message == 'УЗ "Городская клиническая больница №2 г.Гродно"') {
+    selectOrg($data,$con,$message);
+    $method = 'sendMessage';
+    $text = 'Опишите вашу проблему';
+    $send_data = [
+        "text" => $text,
+        "reply_markup" => json_encode([
+            "remove_keyboard" => true
+        ])
+    ];
+}
+elseif (($message == "Решено") || ($message== "Не решено")) {
     $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
     $res = mysqli_query($con, $query);
     if (mysqli_num_rows($res) == 1) {
@@ -537,7 +516,16 @@ else {
         ];
     }
 }
+function selectOrg($data,$con,$message){
+    $query = "SELECT login_telegram  FROM ab1_table_org where `name` = '$message'";
+    $res = mysqli_query($con, $query);
+    if (mysqli_num_rows($res) == 1) {
+        $row = mysqli_fetch_assoc($res);
+        $login_telegram = $row['login_telegram'];
+    }
+    updOrg($data, $con, $message,$login_telegram);
 
+}
 
 $send_data['chat_id'] = $data['chat']['id'];
 
@@ -561,7 +549,6 @@ function sendTelegram($method, $data, $headers = [])
 
 function updOrg($data, $con, $message, $login_telegram)
 {
-
     $id_chat = $data['chat']['id'];
     $query = "SELECT id_ab1_zayavka  FROM ab1_zayavka where id_chat = '$id_chat' ORDER BY id_ab1_zayavka DESC LIMIT 1;";
     $res = mysqli_query($con, $query);
@@ -582,6 +569,8 @@ function updOrg($data, $con, $message, $login_telegram)
     $query1 = "UPDATE ab1_zayavka SET id_org = '$message', id_obl = '$oblast', id_rayon = '$rayon', login_telegram = '$login_telegram' where id_ab1_zayavka = '$id_zayavka'";
     mysqli_query($con, $query1);
 }
+
+
 
 function updAnswer($data, $con, $message)
 {
